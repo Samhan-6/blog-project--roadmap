@@ -1,12 +1,24 @@
 const express = require('express')
 const dotenv = require('dotenv')
+const morgan = require('morgan')
+const colors = require('colors')
 
-// we need to load env variables
-dotenv.config({path: './config.env'})
+// Route File
+const blogs = require('./routes/blogs')
 
 // initialize the express variable
 const app = express()
 
-const PORT = process.env.PORT || 3000
+// body parser
+app.use(express.json())
 
-app.listen(PORT, console.log(`Server is running on the ${process.env.NODE_ENV} mode on the ${process.env.PORT}`))
+// loggin middleware
+if(process.env.NODE_ENV === 'development'){
+    app.use(morgan('dev'))
+}
+
+// Mount Routers
+app.use('/api/v1/blogs/', blogs)
+
+
+module.exports = app
